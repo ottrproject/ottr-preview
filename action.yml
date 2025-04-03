@@ -128,7 +128,7 @@ runs:
         edit-mode: replace
 
     - name: Comment if no changes
-      if: if: ${{ inputs.preview == 'true' && steps.commit.outputs.changes == 'false' }}
+      if: {{ inputs.preview == 'true' && steps.commit.outputs.changes == 'false' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
