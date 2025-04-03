@@ -19,7 +19,7 @@ inputs:
   gh_pat:
     description: If merging to main you will need to give big permissions here
     required: ${secrets.GH_PAT}
-
+    type: string
 runs:
   using: "composite"
   steps:
