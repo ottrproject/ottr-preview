@@ -16,10 +16,7 @@ inputs:
     description: "True or false a preview branch should be created for this. "
     default: TRUE
     type: boolean
-  gh_pat:
-    description: If merging to main you will need to give big permissions here
-    required: ${secrets.GH_PAT}
-    type: string
+
 runs:
   using: "composite"
   steps:
@@ -27,7 +24,6 @@ runs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        token: ${ inputs.gh_pat }
 
     # Set up git checkout
     - name: Set up git checkout

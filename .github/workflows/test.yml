@@ -24,7 +24,6 @@ jobs:
       with:
         toggle_website: "rmd"
         root_path: test-rmd
-        gh_pat: ${secrets.GH_PAT}
 
   quarto-render:
     runs-on: ubuntu-latest
@@ -43,4 +42,3 @@ jobs:
       with:
         toggle_website: "quarto"
         root_path: test-quarto
-        gh_pat: ${secrets.GH_PAT}
