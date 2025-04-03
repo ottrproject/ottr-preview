@@ -21,6 +21,6 @@ jobs:
 
     - name: Run Reports
       id: run-reports
-      uses: ottrproject/ottr-preview@main
+      uses: ottrproject/ottr-preview@cansavvy-patch-1
       with:
         toggle_website: "rmd"
