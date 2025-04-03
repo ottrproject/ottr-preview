@@ -18,7 +18,7 @@ inputs:
     type: boolean
   gh_pat:
     description: If merging to main you will need to give big permissions here
-    default: ${{ inputs.gh_pat }}
+    required: ${secrets.GH_PAT}
 
 runs:
   using: "composite"
