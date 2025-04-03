@@ -1,0 +1,26 @@
+# Candace Savonen Apr 2025
+
+name: Testing ottr-preview
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  ottr-reports:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+
+    steps:
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Run Reports
+      id: run-reports
+      uses: ottrproject/ottr-preview@main
+      with:
+        toggle_website: "rmd"

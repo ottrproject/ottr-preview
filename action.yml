@@ -4,9 +4,10 @@ description: "Render a preview for an Rmd or Quarto website or course"
 
 inputs:
   toggle_website:
-    description: "Is this Rmd or Quarto based?"
+    description: "Is this Rmd or Quarto based? Should be a string of either 'rmd' or 'quarto'"
     default: false
     type: string
+    required: true
 
 runs:
   using: "composite"
