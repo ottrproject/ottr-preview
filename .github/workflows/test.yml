@@ -7,12 +7,11 @@ on:
     branches: [ main, dev ]
 
 jobs:
-  ottr-reports:
+  rmd-render:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       contents: write
-
 
     steps:
     - name: Checkout Actions Repository
@@ -20,8 +19,26 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Run Reports
-      id: run-reports
+    - name: Run render for Rmd
       uses: ottrproject/ottr-preview@cansavvy-patch-1
       with:
         toggle_website: "rmd"
+        root_path: test-rmd
+
+  quarto-render:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Run render for Quarto
+      uses: ottrproject/ottr-preview@cansavvy-patch-1
+      with:
+        toggle_website: "quarto"
+        root_path: test-quarto

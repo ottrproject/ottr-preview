@@ -8,6 +8,10 @@ inputs:
     default: false
     type: string
     required: true
+  root_path:
+    description: "What is the relative file path to the root of the course directory? Default is top of the directory"
+    default: "."
+    type: string
 
 runs:
   using: "composite"
@@ -52,6 +56,7 @@ runs:
     - name: Render course
       id: render
       run: |
+        cd ${{ inputs.root_path }}
         docker run -v ${{ github.workspace }}:/home \
           --workdir=/home \
           jhudsl/ottrpal:dev \
