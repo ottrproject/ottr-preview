@@ -21,7 +21,7 @@ runs:
     - name: Delete branch locally and remotely
       run: git push origin --delete preview-${{ github.event.pull_request.number }} || echo "No branch to delete"
       shell: bash
-      
+
       # Make the branch fresh
     - name: Make the branch fresh
       run: |
@@ -48,24 +48,14 @@ runs:
         git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
       shell: bash
 
-    # Run bookdown rendering
-    - name: Run bookdown render
-      id: bookdown
-      if: ${{inputs.toggle_website == 'rmd' }}
+    # Run rendering
+    - name: Render course
+      id: render
       run: |
         docker run -v ${{ github.workspace }}:/home \
           --workdir=/home \
-          jhudsl/ottrpal:dev Rscript "bookdown::render_book('index.Rmd', output_format = 'all')"
-      shell: bash
-
-    # Run quarto rendering
-    - name: Render quarto version
-      id: quarto
-      if: ${{inputs.toggle_website == 'quarto' }}
-      run: |
-        docker run -v ${{ github.workspace }}:/home \
-          --workdir=/home \
-          jhudsl/ottrpal:dev Rscript -e "quarto::quarto_render('.')"
+          jhudsl/ottrpal:dev \
+          ${{inputs.toggle_website }}
       shell: bash
 
     # This checks on the steps before it and makes sure that they completed.
@@ -73,17 +63,8 @@ runs:
     - name: Check on Rmd render steps
       if: ${{inputs.toggle_website == 'rmd' }}
       run: |
-        echo Bookdown status ${{steps.bookdown.outcome}}
-        if [${{steps.bookdown.outcome}} != 'success']; then
-          exit 1
-        fi
-      shell: bash
-
-    - name: Check on quarto render steps
-      if: ${{inputs.toggle_website == 'quarto' }}
-      run: |
-        echo Quarto status ${{steps.quarto.outcome}}
-        if [${{steps.quarto.outcome}} != 'success']; then
+        echo Rendering status ${{steps.render.outcome}}
+        if [${{steps.render.outcome}} != 'success']; then
           exit 1
         fi
       shell: bash
@@ -92,8 +73,8 @@ runs:
       run: zip website-preview.zip docs/* -r
       shell: bash
 
-    # Commit the rendered bookdown files
-    - name: Commit rendered bookdown files to preview branch
+    # Commit the rendered files
+    - name: Commit rendered files to preview branch
       id: commit
       run: |
         branch_name='preview-${{ github.event.pull_request.number }}'
