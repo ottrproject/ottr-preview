@@ -16,7 +16,7 @@ inputs:
     description: "True or false a preview branch should be created for this. "
     default: TRUE
     type: boolean
-  token:
+  gh_pat:
     description: If merging to main you will need to give big permissions here
     default: ${{ inputs.gh_pat }}
 
@@ -93,7 +93,7 @@ runs:
     # Commit the rendered files
     - name: Commit rendered files to original branch
       if: ${{ inputs.preview == 'true' }}
-      id: commit
+      id: commit_rendered
       run: |
         git add docs/* --force
         git commit -m 'Re-render' || echo "No changes to commit"
