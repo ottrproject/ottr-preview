@@ -56,8 +56,7 @@ runs:
     - name: Render course
       id: render
       run: |
-        cd ${{ inputs.root_path }}
-        docker run -v ${{ github.workspace }}:/home \
+        docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
           --workdir=/home \
           jhudsl/ottrpal:dev \
           ${{inputs.toggle_website }}
