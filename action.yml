@@ -12,6 +12,10 @@ inputs:
     description: "What is the relative file path to the root of the course directory? Default is top of the directory"
     default: "."
     type: string
+  preview:
+    description: "True or false a preview branch should be created for this. "
+    default: TRUE
+    type: boolean
 
 runs:
   using: "composite"
@@ -21,32 +25,23 @@ runs:
       with:
         fetch-depth: 0
 
-      # Delete the branch if this has been run before
-    - name: Delete branch locally and remotely
-      run: git push origin --delete preview-${{ github.event.pull_request.number }} || echo "No branch to delete"
-      shell: bash
-
-      # Make the branch fresh
-    - name: Make the branch fresh
-      run: |
-        git config --global --add safe.directory $GITHUB_WORKSPACE
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-        branch_name='preview-${{ github.event.pull_request.number }}'
-        echo branch doesnt exist
-        git checkout -b $branch_name || echo branch exists
-        git push --set-upstream origin $branch_name || echo branch exists remotely
-      shell: bash
-
     # Set up git checkout
     - name: Set up git checkout
       run: |
         git config --global --add safe.directory $GITHUB_WORKSPACE
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      shell: bash
 
+    # Set up git checkout
+    - name: Set up preview branch
+      if: ${{ inputs.preview == 'true' }}
+      run: |
+        git push origin --delete preview-${{ github.event.pull_request.number }} || echo "No branch to delete"
         branch_name='preview-${{ github.event.pull_request.number }}'
+        echo branch doesnt exist
+        git checkout -b $branch_name || echo branch exists
+        git push --set-upstream origin $branch_name || echo branch exists remotely
         git fetch --all
         git checkout $branch_name
         git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
@@ -64,8 +59,7 @@ runs:
 
     # This checks on the steps before it and makes sure that they completed.
     # If the renders didn't complete we don't want to commit the file changes
-    - name: Check on Rmd render steps
-      if: ${{inputs.toggle_website == 'rmd' }}
+    - name: Check on render steps
       run: |
         echo Rendering status ${{steps.render.outcome}}
         if [${{steps.render.outcome}} != 'success']; then
@@ -79,6 +73,7 @@ runs:
 
     # Commit the rendered files
     - name: Commit rendered files to preview branch
+      if: ${{ inputs.preview == 'true' }}
       id: commit
       run: |
         branch_name='preview-${{ github.event.pull_request.number }}'
@@ -91,6 +86,7 @@ runs:
       shell: bash
 
     - name: Find Comment
+      if: ${{ inputs.preview == 'true' }}
       uses: peter-evans/find-comment@v2
       id: fc
       with:
@@ -99,6 +95,7 @@ runs:
         body-includes: latest commit
 
     - name: Build components of the comment
+      if: ${{ inputs.preview == 'TRUE' }}
       id: build-components
       run: |
         course_name=$(head -n 1 _bookdown.yml | cut -d'"' -f 2| tr " " "-")
@@ -114,7 +111,7 @@ runs:
       shell: bash
 
     - name: Create or update comment
-      if: steps.commit.outputs.changes == 'true'
+      if: ${{ inputs.preview == 'true' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
@@ -131,7 +128,7 @@ runs:
         edit-mode: replace
 
     - name: Comment if no changes
-      if: steps.commit.outputs.changes == 'false'
+      if: if: ${{ inputs.preview == 'true' && steps.commit.outputs.changes == 'false' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
