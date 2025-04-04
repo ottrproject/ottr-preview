@@ -18,7 +18,7 @@ inputs:
     type: boolean
   docker_image:
     description: "The docker image that will be used for rendering"
-    default: jhudsl/ottrpal:dev
+    default: jhudsl/base_ottr:dev
     type: string
 
 runs:
