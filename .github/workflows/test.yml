@@ -25,12 +25,6 @@ jobs:
         toggle_website: "rmd"
         root_path: test-rmd
 
-    steps:
-    - name: Checkout Actions Repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
     - name: Run render for Quarto
       uses: ottrproject/ottr-preview@cansavvy-patch-1
       with:
