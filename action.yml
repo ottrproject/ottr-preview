@@ -99,7 +99,7 @@ runs:
         git add ${{ github.workspace }}/${{ inputs.root_path }}/docs/* --force
         git add ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip --force
         git commit -m 'Render preview' || echo "No changes to commit"
-        git clean
+        git clean --force
         git pull --rebase --set-upstream origin $branch_name --allow-unrelated-histories --strategy-option=ours
         git push --force || echo "No changes to commit"
       shell: bash
