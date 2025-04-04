@@ -8,6 +8,14 @@ inputs:
     default: false
     type: string
     required: true
+  root_path:
+    description: "What is the relative file path to the root of the course directory? Default is top of the directory"
+    default: "."
+    type: string
+  preview:
+    description: "True or false a preview branch should be created for this. "
+    default: TRUE
+    type: boolean
 
 runs:
   using: "composite"
@@ -23,60 +31,75 @@ runs:
         git config --global --add safe.directory $GITHUB_WORKSPACE
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      shell: bash
 
+    # Set up git checkout
+    - name: Set up preview branch
+      if: ${{ inputs.preview == 'true' }}
+      run: |
+        git push origin --delete preview-${{ github.event.pull_request.number }} || echo "No branch to delete"
         branch_name='preview-${{ github.event.pull_request.number }}'
+        echo branch doesnt exist
+        git checkout -b $branch_name || echo branch exists
+        git push --set-upstream origin $branch_name || echo branch exists remotely
         git fetch --all
         git checkout $branch_name
         git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
       shell: bash
 
-    # Run bookdown rendering
-    - name: Run bookdown render
-      id: bookdown
-      if: ${{inputs.toggle_website == 'rmd' }}
-      run: Rscript -e "bookdown::render_book('index.Rmd', output_format = 'all')"
-
-    # Run quarto rendering
-    - name: Render quarto version
-      id: quarto
-      if: ${{inputs.toggle_website == 'quarto' }}
-      run: Rscript -e "quarto::quarto_render('.')"
+    # Run rendering
+    - name: Render course
+      id: render
+      run: |
+        docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
+          --workdir=/home \
+          jhudsl/ottrpal:dev \
+          ${{ inputs.toggle_website }}
+      shell: bash
 
     # This checks on the steps before it and makes sure that they completed.
     # If the renders didn't complete we don't want to commit the file changes
-    - name: Check on Rmd render steps
-      if: ${{inputs.toggle_website == 'rmd' }}
+    - name: Check on render steps
       run: |
-        echo Bookdown status ${{steps.bookdown.outcome}}
-        if [${{steps.bookdown.outcome}} != 'success']; then
+        echo Rendering status ${{steps.render.outcome}}
+        if [${{steps.render.outcome}} != 'success']; then
           exit 1
         fi
-
-    - name: Check on quarto render steps
-      if: ${{inputs.toggle_website == 'quarto' }}
-      run: |
-        echo Quarto status ${{steps.quarto.outcome}}
-        if [${{steps.quarto.outcome}} != 'success']; then
-          exit 1
-        fi
+      shell: bash
 
     - name: Website preview for download
-      run: zip website-preview.zip docs/* -r
+      if: ${{ inputs.preview == 'true' }}
+      run: zip website-preview.zip ${{ github.workspace }}/${{ inputs.root_path }}/docs/* -r
+      shell: bash
 
-    # Commit the rendered bookdown files
-    - name: Commit rendered bookdown files to preview branch
+    # Commit the rendered files
+    - name: Commit rendered files to preview branch
+      if: ${{ inputs.preview == 'true' }}
       id: commit
       run: |
+        git diff --name-only --cached | xargs -i sh -c 'sudo chown $USER:$USER {}; chmod +w {}'
         branch_name='preview-${{ github.event.pull_request.number }}'
         git diff origin/main -- docs >/dev/null && changes=true || changes=false
         echo "changes=$changes" >> $GITHUB_OUTPUT
-        git add . --force
+        git add ${{ github.workspace }}/${{ inputs.root_path }}/docs/* --force
         git commit -m 'Render preview' || echo "No changes to commit"
         git pull --rebase --set-upstream origin $branch_name --allow-unrelated-histories --strategy-option=ours
         git push --force || echo "No changes to commit"
       shell: bash
 
+    # Commit the rendered files
+    - name: Commit rendered files to original branch
+      if: ${{ inputs.preview == 'true' }}
+      id: commit_rendered
+      run: |
+        git add ${{ github.workspace }}/${{ inputs.root_path }}/docs/* --force
+        git commit -m 'Re-render' || echo "No changes to commit"
+        git pull --rebase --set-upstream origin $branch_name --allow-unrelated-histories --strategy-option=ours
+        git push --force || echo "No changes to commit"
+      shell: bash
+
     - name: Find Comment
+      if: ${{ inputs.preview == 'true' }}
       uses: peter-evans/find-comment@v2
       id: fc
       with:
@@ -85,11 +108,12 @@ runs:
         body-includes: latest commit
 
     - name: Build components of the comment
+      if: ${{ inputs.preview == 'TRUE' }}
       id: build-components
       run: |
-        course_name=$(head -n 1 _bookdown.yml | cut -d'"' -f 2| tr " " "-")
+        docx_file=$(ls docs/*.docx || echo NA)
         bookdown_link=$(echo "https://htmlpreview.github.io/?https://raw.githubusercontent.com/$GITHUB_REPOSITORY/preview-${{ github.event.pull_request.number }}/docs/index.html")
-        docx_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/docs/$course_name.docx")
+        docx_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file")
         zip_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/website-preview.zip")
         echo "zip_link=$zip_link" >> $GITHUB_OUTPUT
         echo "bookdown_link=$bookdown_link" >> $GITHUB_OUTPUT
@@ -97,9 +121,10 @@ runs:
         echo "time=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         echo "commit_id=$GITHUB_SHA" >> $GITHUB_OUTPUT
         echo ${{steps.commit.outputs.changes}}
+      shell: bash
 
     - name: Create or update comment
-      if: steps.commit.outputs.changes == 'true'
+      if: ${{ inputs.preview == 'true' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
@@ -116,7 +141,7 @@ runs:
         edit-mode: replace
 
     - name: Comment if no changes
-      if: steps.commit.outputs.changes == 'false'
+      if: ${{ inputs.preview == 'true' && steps.commit.outputs.changes == 'false' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
