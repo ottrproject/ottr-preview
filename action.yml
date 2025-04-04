@@ -92,7 +92,7 @@ runs:
       if: ${{ inputs.preview == 'true' }}
       id: commit_rendered
       run: |
-        git add ${{ github.workspace }}/${{ inputs.root_path }}/docs/* --force
+        git add ${{ github.workspace }}/${{ inputs.root_path }}/* --force
         git commit -m 'Re-render' || echo "No changes to commit"
         git pull --rebase --set-upstream origin $branch_name --allow-unrelated-histories --strategy-option=ours
         git push --force || echo "No changes to commit"
