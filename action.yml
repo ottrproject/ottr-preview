@@ -4,7 +4,7 @@ description: "Render a preview for an Rmd or Quarto website or course"
 
 inputs:
   toggle_website:
-    description: "Is this Rmd or Quarto based? Should be a string of either 'rmd' or 'quarto'"
+    description: "Is this Rmd or Quarto based? Should be a string of either 'rmd', 'quarto', 'rmd_web', or 'quarto_web'"
     default: false
     type: string
     required: true
@@ -16,6 +16,10 @@ inputs:
     description: "True or false a preview branch should be created for this. "
     default: TRUE
     type: boolean
+  docker_image:
+    description: "The docker image that will be used for rendering"
+    default: jhudsl/ottrpal:dev
+    type: string
 
 runs:
   using: "composite"
@@ -48,13 +52,16 @@ runs:
       shell: bash
 
     # Run rendering
-    - name: Render course
+    - name: Render Special
       id: render
       run: |
-        docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
-          --workdir=/home \
-          jhudsl/ottrpal:dev \
-          ${{ inputs.toggle_website }}
+        curl -O "https://github.com/ottrproject/ottr-docker/raw/refs/heads/main/ottrpal/entrypoint.sh"
+        if [ ${{ inputs.toggle_website == 'rmd' }} ]; then
+          docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
+            --workdir=/home \
+            ${{ inputs.docker_image }} bash entrypoint.sh ${{ inputs.toggle_website }}
+        fi
+        rm entrypoint.sh
       shell: bash
 
     # This checks on the steps before it and makes sure that they completed.
