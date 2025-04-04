@@ -79,8 +79,12 @@ runs:
     - name: Website preview for download
       if: ${{ inputs.preview == 'true' }}
       run: |
-        zip ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip . \
-         -i ${{ github.workspace }}/${{ inputs.root_path }}/docs/* -r
+        if [ '${{ inputs.root_path }}' != '.']; then
+          zip ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip . \
+          -i ${{ github.workspace }}/${{ inputs.root_path }}/docs/* -r
+        else
+          zip ${{ github.workspace }}/website-preview.zip . \
+          -i ${{ github.workspace }}/docs/* -r
       shell: bash
 
     # Commit the rendered files
