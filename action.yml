@@ -85,6 +85,7 @@ runs:
         else
           zip ${{ github.workspace }}/website-preview.zip . \
           -i ${{ github.workspace }}/docs/* -r
+        fi
       shell: bash
 
     # Commit the rendered files
