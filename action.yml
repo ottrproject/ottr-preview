@@ -57,10 +57,10 @@ runs:
       run: |
         curl -OL https://github.com/ottrproject/ottr-docker/raw/refs/heads/main/ottrpal/entrypoint.sh
         # TODO: I was fighting curl about downloads I know this should be a separate step
-        # Just fix this silly thing later. 
+        # Just fix this silly thing later.
         mv entrypoint.sh ${{ inputs.root_path }}/entrypoint.sh
         docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
-          ${{ inputs.docker_image }} bash /home/entrypoint.sh ${{ inputs.toggle_website }}
+          ${{ inputs.docker_image }} bash /home/rstudio/entrypoint.sh ${{ inputs.toggle_website }}
         rm ${{ inputs.root_path }}/entrypoint.sh
       shell: bash
 
