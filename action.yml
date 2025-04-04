@@ -58,8 +58,7 @@ runs:
         curl -O "https://github.com/ottrproject/ottr-docker/raw/refs/heads/main/ottrpal/entrypoint.sh"
         if [ ${{ inputs.toggle_website == 'rmd' }} ]; then
           docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
-            --workdir=/home \
-            ${{ inputs.docker_image }} bash entrypoint.sh ${{ inputs.toggle_website }}
+            ${{ inputs.docker_image }} bash /home/entrypoint.sh ${{ inputs.toggle_website }}
         fi
         rm entrypoint.sh
       shell: bash
