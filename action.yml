@@ -86,7 +86,6 @@ runs:
       if: ${{ inputs.preview == 'true' }}
       id: commit
       run: |
-        git diff --name-only --cached | xargs -i sh -c 'sudo chown $USER:$USER {}; chmod +w {}'
         branch_name='preview-${{ github.event.pull_request.number }}'
         git diff origin/main -- ${{ inputs.root_path }}/docs >/dev/null && changes=true || changes=false
         echo "changes=$changes" >> $GITHUB_OUTPUT
