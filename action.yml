@@ -97,6 +97,7 @@ runs:
         git diff origin/main -- ${{ inputs.root_path }}/docs >/dev/null && changes=true || changes=false
         echo "changes=$changes" >> $GITHUB_OUTPUT
         git add ${{ github.workspace }}/${{ inputs.root_path }}/docs/* --force
+        git add ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip --force
         git commit -m 'Render preview' || echo "No changes to commit"
         git pull --rebase --set-upstream origin $branch_name --allow-unrelated-histories --strategy-option=ours
         git push --force || echo "No changes to commit"
