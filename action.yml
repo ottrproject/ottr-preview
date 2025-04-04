@@ -56,12 +56,12 @@ runs:
       id: render
       run: |
         curl "https://github.com/ottrproject/ottr-docker/raw/refs/heads/main/ottrpal/entrypoint.sh" \
-          -o ${{ inputs.root_path }}/entrypoint.sh 
+          -o ${{ inputs.root_path }}/entrypoint.sh
         if [ ${{ inputs.toggle_website == 'rmd' }} ]; then
           docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
             ${{ inputs.docker_image }} bash /home/entrypoint.sh ${{ inputs.toggle_website }}
         fi
-        rm entrypoint.sh
+        rm ${{ inputs.root_path }}/entrypoint.sh
       shell: bash
 
     # This checks on the steps before it and makes sure that they completed.
