@@ -55,7 +55,8 @@ runs:
     - name: Render Special
       id: render
       run: |
-        curl -O "https://github.com/ottrproject/ottr-docker/raw/refs/heads/main/ottrpal/entrypoint.sh"
+        curl "https://github.com/ottrproject/ottr-docker/raw/refs/heads/main/ottrpal/entrypoint.sh" \
+          -o ${{ inputs.root_path }}/entrypoint.sh 
         if [ ${{ inputs.toggle_website == 'rmd' }} ]; then
           docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
             ${{ inputs.docker_image }} bash /home/entrypoint.sh ${{ inputs.toggle_website }}
