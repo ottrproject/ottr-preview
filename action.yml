@@ -110,9 +110,9 @@ runs:
       if: ${{ inputs.preview == 'TRUE' }}
       id: build-components
       run: |
-        course_name=$(head -n 1 _bookdown.yml | cut -d'"' -f 2| tr " " "-")
+        docx_file=$(ls docs/*.docx))
         bookdown_link=$(echo "https://htmlpreview.github.io/?https://raw.githubusercontent.com/$GITHUB_REPOSITORY/preview-${{ github.event.pull_request.number }}/docs/index.html")
-        docx_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/docs/$course_name.docx")
+        docx_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file")
         zip_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/website-preview.zip")
         echo "zip_link=$zip_link" >> $GITHUB_OUTPUT
         echo "bookdown_link=$bookdown_link" >> $GITHUB_OUTPUT
