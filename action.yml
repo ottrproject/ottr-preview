@@ -55,7 +55,7 @@ runs:
     - name: Render Special
       id: render
       run: |
-        curl -OL https://github.com/ottrproject/ottr-docker/raw/refs/heads/main/ottrpal/entrypoint.sh
+        curl -OL https://github.com/ottrproject/ottr-preview/raw/refs/heads/main/entrypoint.sh
         # TODO: I was fighting curl about downloads I know this should be a separate step
         # Just fix this silly thing later.
         if [ '${{ inputs.root_path }}' != '.' ]; then
