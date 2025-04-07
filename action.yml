@@ -135,6 +135,7 @@ runs:
         git commit -m 'Render course' || echo "No changes to commit"
         git status docs/*
         git push --force -u origin main  || echo "No changes to push"
+      shell: bash
 
     - name: Find Comment
       if: ${{ inputs.preview == 'true' }}
