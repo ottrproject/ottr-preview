@@ -62,6 +62,7 @@ runs:
         git fetch origin
         git pull --rebase --allow-unrelated-histories --strategy-option=ours
         rm -rf docs/*
+      shell: bash
           
     # Run rendering
     - name: Render Special
