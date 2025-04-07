@@ -50,7 +50,16 @@ runs:
         git checkout $branch_name
         git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
       shell: bash
-
+      
+    # We want a fresh run of the renders each time
+    - name: Delete old docs/*
+      if: ${{ inputs.preview == 'false' }}
+      run: |
+        git remote set-url origin https://${GH_PAT}@github.com/${GITHUB_REPOSITORY}
+        git fetch origin
+        git pull --rebase --allow-unrelated-histories --strategy-option=ours
+        rm -rf docs/*
+          
     # Run rendering
     - name: Render Special
       id: render
