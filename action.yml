@@ -75,7 +75,7 @@ runs:
           mv entrypoint.sh ${{ inputs.root_path }}/entrypoint.sh
         fi
         docker run -v ${{ github.workspace }}/${{ inputs.root_path }}:/home \
-          ${{ inputs.docker_image }} bash /home/entrypoint.sh ${{ inputs.toggle_website }}
+          ${{ inputs.docker_image }} bash /home/entrypoint.sh ${{ inputs.toggle_website }} || exit_code=$?
         rm ${{ inputs.root_path }}/entrypoint.sh
       shell: bash
 
