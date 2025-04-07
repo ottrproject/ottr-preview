@@ -23,6 +23,8 @@ inputs:
   token: 
     description: "A GitHub personal access token only needed if preview = 'false'. Needs privileges to merge to main."
     type: string
+  repo: 
+    description: "WHat repo are we merging to? Only needed for 
 
 runs:
   using: "composite"
@@ -58,7 +60,7 @@ runs:
     - name: Delete old docs/*
       if: ${{ inputs.preview == 'false' }}
       run: |
-        git remote set-url origin https://${inputs.token}@github.com/${GITHUB_REPOSITORY}
+        git remote set-url origin https://${{ inputs.token }}@github.com/$GITHUB_REPOSITORY
         git fetch origin
         git pull --rebase --allow-unrelated-histories --strategy-option=ours
         rm -rf docs/*
