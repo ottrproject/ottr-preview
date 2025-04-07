@@ -20,6 +20,9 @@ inputs:
     description: "The docker image that will be used for rendering"
     default: jhudsl/base_ottr:dev
     type: string
+  token: 
+    description: "A GitHub personal access token only needed if preview = 'false'. Needs privileges to merge to main."
+    type: string
 
 runs:
   using: "composite"
@@ -55,7 +58,7 @@ runs:
     - name: Delete old docs/*
       if: ${{ inputs.preview == 'false' }}
       run: |
-        git remote set-url origin https://${GH_PAT}@github.com/${GITHUB_REPOSITORY}
+        git remote set-url origin https://${inputs.token}@github.com/${GITHUB_REPOSITORY}
         git fetch origin
         git pull --rebase --allow-unrelated-histories --strategy-option=ours
         rm -rf docs/*
