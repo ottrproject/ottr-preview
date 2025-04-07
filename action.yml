@@ -114,6 +114,15 @@ runs:
         git push --force || echo "No changes to commit"
       shell: bash
 
+    # Commit the rendered course files
+    - name: Commit rendered course files
+      if: ${{ inputs.preview == 'false' }}
+      run: |
+        git add --force docs/*
+        git commit -m 'Render course' || echo "No changes to commit"
+        git status docs/*
+        git push --force -u origin main  || echo "No changes to push"
+
     - name: Find Comment
       if: ${{ inputs.preview == 'true' }}
       uses: peter-evans/find-comment@v2
@@ -122,9 +131,9 @@ runs:
         issue-number: ${{ github.event.pull_request.number }}
         comment-author: 'github-actions[bot]'
         body-includes: latest commit
-
+    
     - name: Build components of the comment
-      if: ${{ inputs.preview == 'TRUE' }}
+      if: ${{ inputs.preview == 'true' }}
       id: build-components
       run: |
         docx_file=$(ls ${{ inputs.root_path }}/docs/*.docx || echo NA)
