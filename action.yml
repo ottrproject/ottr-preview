@@ -65,8 +65,8 @@ runs:
       shell: bash
           
     # Run rendering
+    - uses: docker/setup-buildx-action@v3
     - name: Render Special
-      uses: docker/setup-buildx-action@v3
       id: render
       run: |
         curl -OL https://github.com/ottrproject/ottr-preview/raw/refs/heads/main/entrypoint.sh
