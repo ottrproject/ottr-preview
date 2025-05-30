@@ -27,9 +27,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: 'docker'
     - name: Checkout files
       uses: actions/checkout@v4
-      uses: 'docker'
       with:
         fetch-depth: 0
 
