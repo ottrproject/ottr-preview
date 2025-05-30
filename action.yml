@@ -29,6 +29,7 @@ runs:
   steps:
     - name: Checkout files
       uses: actions/checkout@v4
+      uses: 'docker'
       with:
         fetch-depth: 0
 
@@ -67,7 +68,6 @@ runs:
     # Run rendering
     - name: Render Special
       id: render
-      uses: 'docker'
       run: |
         curl -OL https://github.com/ottrproject/ottr-preview/raw/refs/heads/main/entrypoint.sh
         # TODO: I was fighting curl about downloads I know this should be a separate step
