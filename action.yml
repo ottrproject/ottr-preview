@@ -27,7 +27,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: 'docker'
     - name: Checkout files
       uses: actions/checkout@v4
       with:
@@ -67,6 +66,7 @@ runs:
           
     # Run rendering
     - name: Render Special
+      uses: docker/setup-buildx-action@v3
       id: render
       run: |
         curl -OL https://github.com/ottrproject/ottr-preview/raw/refs/heads/main/entrypoint.sh
