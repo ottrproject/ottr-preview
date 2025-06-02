@@ -67,7 +67,9 @@ runs:
     #install docker when inputs.preview == 'false'
     - name: Set up Docker
       if: ${{ inputs.preview == 'false' }}
-      uses: docker/setup-docker-action@v4
+      run:
+        apt-get install docker
+      shell: bash
     
     # Run rendering
     - name: Render Special
