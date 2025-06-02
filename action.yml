@@ -53,23 +53,6 @@ runs:
         git checkout $branch_name
         git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
       shell: bash
-      
-    # We want a fresh run of the renders each time
-    - name: Delete old docs/*
-      if: ${{ inputs.preview == 'false' }}
-      run: |
-        git remote set-url origin https://${{ inputs.token }}@github.com/$GITHUB_REPOSITORY
-        git fetch origin
-        git pull --rebase --allow-unrelated-histories --strategy-option=ours
-        rm -rf docs/*
-      shell: bash
-
-    #install docker when inputs.preview == 'false'
-    - name: Set up Docker
-      if: ${{ inputs.preview == 'false' }}
-      run:
-        apt-get update && apt-get install docker
-      shell: bash
     
     # Run rendering
     - name: Render Special
