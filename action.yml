@@ -68,7 +68,7 @@ runs:
     - name: Set up Docker
       if: ${{ inputs.preview == 'false' }}
       run:
-        apt-get install docker
+        apt-get update && apt-get install docker
       shell: bash
     
     # Run rendering
