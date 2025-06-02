@@ -53,8 +53,8 @@ runs:
         git checkout $branch_name
         git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
       shell: bash
-      
-    # We want a fresh run of the renders each time
+
+    # We want a fresh run of the renders each timeMore actions
     - name: Delete old docs/*
       if: ${{ inputs.preview == 'false' }}
       run: |
@@ -63,7 +63,7 @@ runs:
         git pull --rebase --allow-unrelated-histories --strategy-option=ours
         rm -rf docs/*
       shell: bash
-          
+    
     # Run rendering
     - name: Render Special
       id: render
