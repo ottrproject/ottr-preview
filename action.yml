@@ -76,7 +76,6 @@ runs:
     
     # Run rendering
     - name: Render Special
-      runs-on: ubuntu-latest
       id: render
       run: |
         curl -OL https://github.com/ottrproject/ottr-preview/raw/refs/heads/main/entrypoint.sh
