@@ -157,7 +157,6 @@ runs:
           docx_link="NA"
         fi
         bookdown_link=$(echo "https://htmlpreview.github.io/?https://raw.githubusercontent.com/$GITHUB_REPOSITORY/preview-${{ github.event.pull_request.number }}/${{ inputs.root_path }}/docs/index.html")
-        docx_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file")
         zip_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/${{ inputs.root_path }}/website-preview.zip")
         echo "zip_link=$zip_link" >> $GITHUB_OUTPUT
         echo "bookdown_link=$bookdown_link" >> $GITHUB_OUTPUT
