@@ -20,13 +20,13 @@ jobs:
         fetch-depth: 0
 
     - name: Run render for Rmd
-      uses: ottrproject/ottr-preview@main
+      uses: ottrproject/ottr-preview@cansavvy/fix-exit-code
       with:
         toggle_website: "rmd"
         root_path: test-rmd
 
     - name: Run render for Quarto
-      uses: ottrproject/ottr-preview@main
+      uses: ottrproject/ottr-preview@cansavvy/fix-exit-code
       with:
         toggle_website: "quarto"
         root_path: test-quarto
