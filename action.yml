@@ -150,7 +150,12 @@ runs:
       if: ${{ inputs.preview == 'true' }}
       id: build-components
       run: |
-        docx_file=$(ls ${{ inputs.root_path }}/docs/*.docx || echo NA)
+        docx_file=$(ls ./docs/*.docx 2>/dev/null | head -1)
+        if [ -n "$docx_file" ]; then
+          docx_link="https://github.com/$GITHUB_REPOSITORY/raw/preview-7/$docx_file"
+        else
+          docx_link="NA"
+        fi
         bookdown_link=$(echo "https://htmlpreview.github.io/?https://raw.githubusercontent.com/$GITHUB_REPOSITORY/preview-${{ github.event.pull_request.number }}/${{ inputs.root_path }}/docs/index.html")
         docx_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file")
         zip_link=$(echo "https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/${{ inputs.root_path }}/website-preview.zip")
