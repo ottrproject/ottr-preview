@@ -20,19 +20,19 @@ jobs:
         fetch-depth: 0
 
     - name: Run render for Rmd
-      uses: ottrproject/ottr-preview@main
+      uses: ottrproject/ottr-preview@testweb
       with:
         toggle_website: "rmd"
         root_path: test-rmd
 
     - name: Run render for Quarto
-      uses: ottrproject/ottr-preview@main
+      uses: ottrproject/ottr-preview@testweb
       with:
         toggle_website: "quarto"
         root_path: test-quarto
 
     - name: Run render for Rmd_web
-      uses: ottrproject/ottr-preview@main
+      uses: ottrproject/ottr-preview@testweb
       with:
         toggle_website: "rmd_web"
         root_path: test-rmd_web
