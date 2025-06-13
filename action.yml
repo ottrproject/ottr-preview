@@ -35,7 +35,7 @@ runs:
 
     - name: Checkout files for rendering on main
       if: ${{ inputs.preview == 'false' }}
-      uses: action/checkout@v4
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         token: ${{ inputs.token }}
