@@ -28,10 +28,18 @@ runs:
   using: "composite"
   steps:
     - name: Checkout files
+      if: ${{ inputs.preview == 'true' }}
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
+    - name: Checkout files for rendering on main
+      if: ${{ inputs.preview == 'false' }}
+      uses: action/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ inputs.token }}
+      
     # Set up git checkout
     - name: Set up git checkout
       run: |
