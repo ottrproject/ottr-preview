@@ -184,7 +184,7 @@ runs:
           _Updated at ${{ steps.build-components.outputs.time }} with changes from the latest commit ${{ steps.build-components.outputs.commit_id }}_
         edit-mode: replace
 
-    - name: Create or update comment
+    - name: Create or update comment (without docx file)
       if: ${{ inputs.preview == 'true' && steps.build-components.outputs.docx_link == "NA" }}
       uses: peter-evans/create-or-update-comment@v2
       with:
