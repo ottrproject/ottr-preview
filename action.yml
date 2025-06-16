@@ -153,7 +153,7 @@ runs:
       run: |
         docx_file=$(ls ./docs/*.docx 2>/dev/null | head -1 || true)
         if [ -n "$docx_file" ]; then
-            docx_link="https://github.com/$GITHUB_REPOSITORY/raw/preview-14/$docx_file"
+            docx_link="https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file"
         else
             docx_link="NA"
         fi
