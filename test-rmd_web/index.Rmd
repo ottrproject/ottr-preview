@@ -6,4 +6,4 @@ output:
 
 ### **About**
 
-This is a test of rendering an Rmd for a website using the ottr-preview action.
+This is a test of rendering an Rmd for a website using the ottr-preview action. Changes to the action may mean that there will be no docx file listed in the PR/preview comment hopefully.
