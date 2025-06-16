@@ -20,7 +20,7 @@ jobs:
         fetch-depth: 0
 
     - name: Run render for Rmd
-      uses: ottrproject/ottr-preview@kweav-suppress-docx
+      uses: ottrproject/ottr-preview@testweb
       with:
         toggle_website: "rmd"
         root_path: test-rmd
@@ -32,7 +32,7 @@ jobs:
         root_path: test-quarto
 
     - name: Run render for Rmd_web
-      uses: ottrproject/ottr-preview@kweav-suppress-docx
+      uses: ottrproject/ottr-preview@testweb
       with:
         toggle_website: "rmd_web"
         root_path: test-rmd_web
