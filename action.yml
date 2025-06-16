@@ -166,8 +166,8 @@ runs:
         echo ${{steps.commit.outputs.changes}}
       shell: bash
 
-    - name: Create or update comment
-      if: ${{ inputs.preview == 'true' }}
+   - name: Create or update comment (with docx file)
+      if: ${{ inputs.preview == 'true' && steps.build-components.outputs.docx_link != "NA" }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
@@ -177,6 +177,22 @@ runs:
           - :eyes: Quick [preview of course website here](${{ steps.build-components.outputs.bookdown_link }}) \*
           - :microscope: Comprehensive [download of the course website here](${{ steps.build-components.outputs.zip_link }})
           - Download the [.docx file](${{ steps.build-components.outputs.docx_link }})
+
+          \* note not all html features will be properly displayed in the "quick preview" but it will give you a rough idea.
+
+          _Updated at ${{ steps.build-components.outputs.time }} with changes from the latest commit ${{ steps.build-components.outputs.commit_id }}_
+        edit-mode: replace
+
+    - name: Create or update comment (without docx file)
+      if: ${{ inputs.preview == 'true' && steps.build-components.outputs.docx_link == "NA" }}
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        comment-id: ${{ steps.fc.outputs.comment-id }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          Re-rendered previews from the latest commit:
+          - :eyes: Quick [preview of course website here](${{ steps.build-components.outputs.bookdown_link }}) \*
+          - :microscope: Comprehensive [download of the course website here](${{ steps.build-components.outputs.zip_link }})
 
           \* note not all html features will be properly displayed in the "quick preview" but it will give you a rough idea.
 
