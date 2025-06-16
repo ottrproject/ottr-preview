@@ -168,7 +168,7 @@ runs:
       shell: bash
 
     - name: Create or update comment (with docx file)
-      if: ${{ inputs.preview == 'true' && steps.build-components.outputs.docx_link != "NA" }}
+      if: ${{ inputs.preview == 'true' }} && ${{ steps.build-components.outputs.docx_link != "NA" }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
@@ -185,7 +185,7 @@ runs:
         edit-mode: replace
 
     - name: Create or update comment (without docx file)
-      if: ${{ inputs.preview == 'true' && steps.build-components.outputs.docx_link == "NA" }}
+      if: ${{ inputs.preview == 'true' }} && ${{ steps.build-components.outputs.docx_link == "NA" }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
