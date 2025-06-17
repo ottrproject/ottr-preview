@@ -26,7 +26,7 @@ jobs:
         root_path: test-rmd
 
     - name: Run render for Quarto
-      uses: ottrproject/ottr-preview@cansavvy/no-docx
+      uses: ottrproject/ottr-preview@usrname/your-testing-branch-replace
       with:
         toggle_website: "quarto"
         root_path: test-quarto
