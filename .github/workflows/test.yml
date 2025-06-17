@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-
+# update for your user name and branch to test
     - name: Run render for Rmd
       uses: ottrproject/ottr-preview@usrname/your-testing-branch-replace
       with:
