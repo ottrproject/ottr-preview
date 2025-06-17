@@ -20,7 +20,7 @@ jobs:
         fetch-depth: 0
 
     - name: Run render for Rmd
-      uses: ottrproject/ottr-preview@cansavvy/no-docx
+      uses: ottrproject/ottr-preview@usrname/your-testing-branch-replace
       with:
         toggle_website: "rmd"
         root_path: test-rmd
