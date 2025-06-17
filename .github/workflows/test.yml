@@ -18,15 +18,15 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-
+# update for your user name and branch to test
     - name: Run render for Rmd
-      uses: ottrproject/ottr-preview@kweav-tryEnvPat
+      uses: ottrproject/ottr-preview@cansavvy/no-docx
       with:
         toggle_website: "rmd"
         root_path: test-rmd
 
     - name: Run render for Quarto
-      uses: ottrproject/ottr-preview@kweav-tryEnvPat
+      uses: ottrproject/ottr-preview@cansavvy/no-docx
       with:
         toggle_website: "quarto"
         root_path: test-quarto
