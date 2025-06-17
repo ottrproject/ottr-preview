@@ -20,7 +20,7 @@ jobs:
         fetch-depth: 0
 # update for your user name and branch to test
     - name: Run render for Rmd
-      uses: ottrproject/ottr-preview@usrname/your-testing-branch-replace
+      uses: ottrproject/ottr-preview@cansavvy/no-docx
       with:
         toggle_website: "rmd"
         root_path: test-rmd
