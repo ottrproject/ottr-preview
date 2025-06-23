@@ -14,13 +14,13 @@ inputs:
     type: string
   preview:
     description: "True or false a preview branch should be created for this. "
-    default: TRUE
+    default: true
     type: boolean
   docker_image:
     description: "The docker image that will be used for rendering"
     default: jhudsl/base_ottr:dev
     type: string
-  token: 
+  token:
     description: "A GitHub personal access token only needed if preview = 'false'. Needs privileges to merge to main."
     type: string
 
@@ -39,7 +39,7 @@ runs:
       with:
         fetch-depth: 0
         token: ${{ inputs.token }}
-      
+
     # Set up git checkout
     - name: Set up git checkout
       run: |
@@ -61,7 +61,7 @@ runs:
         git checkout $branch_name
         git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
       shell: bash
-      
+
     # We want a fresh run of the renders each time
     - name: Delete old docs/*
       if: ${{ inputs.preview == 'false' }}
@@ -71,7 +71,7 @@ runs:
         git pull --rebase --allow-unrelated-histories --strategy-option=ours
         rm -rf docs/*
       shell: bash
-          
+
     # Run rendering
     - name: Render Special
       id: render
@@ -156,7 +156,7 @@ runs:
         issue-number: ${{ github.event.pull_request.number }}
         comment-author: 'github-actions[bot]'
         body-includes: latest commit
-    
+
     - name: Build components of the comment
       if: ${{ inputs.preview == 'true' }}
       id: build-components
@@ -178,7 +178,7 @@ runs:
       shell: bash
 
     - name: Create or update comment (with docx file)
-      if: ${{ inputs.preview == 'true' }} && ${{ steps.build-components.outputs.docx_link != 'NA' }}
+      if: ${{ inputs.preview == 'true' && steps.build-components.outputs.docx_link != 'NA' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
@@ -195,7 +195,7 @@ runs:
         edit-mode: replace
 
     - name: Create or update comment (without docx file)
-      if: ${{ inputs.preview == 'true' }} && ${{ steps.build-components.outputs.docx_link == 'NA' }}
+      if: ${{ inputs.preview == 'true' && steps.build-components.outputs.docx_link == 'NA' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
