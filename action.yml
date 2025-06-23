@@ -28,13 +28,13 @@ runs:
   using: "composite"
   steps:
     - name: Checkout files
-      if: ${{ inputs.preview == 'true' }}
+      if: inputs.preview == 'true'
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Checkout files for rendering on main
-      if: ${{ inputs.preview == 'false' }}
+      if: inputs.preview == 'false'
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
@@ -52,6 +52,7 @@ runs:
     - name: Set up preview branch
       if: ${{ inputs.preview == 'true' }}
       run: |
+        echo preview selection ${{ inputs.preview == 'true' }}
         git push origin --delete preview-${{ github.event.pull_request.number }} || echo "No branch to delete"
         branch_name='preview-${{ github.event.pull_request.number }}'
         echo branch doesnt exist
