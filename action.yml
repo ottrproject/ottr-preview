@@ -77,8 +77,8 @@ runs:
       id: render
       run: |
         curl -OL https://github.com/ottrproject/ottr-preview/raw/refs/heads/main/entrypoint.sh
-        # TODO: I was fighting curl about downloads I know this should be a separate step
-        # Just fix this silly thing later.
+        : # TODO: I was fighting curl about downloads I know this should be a separate step
+        : # Just fix this silly thing later.
         if [ '${{ inputs.root_path }}' != '.' ]; then
           mv entrypoint.sh ${{ inputs.root_path }}/entrypoint.sh
         fi
@@ -161,7 +161,7 @@ runs:
       if: ${{ inputs.preview == 'true' }}
       id: build-components
       run: |
-        docx_file=$(ls ./*.docx 2>/dev/null | head -1 || true)
+        docx_file=$(ls *.docx 2>/dev/null | head -1 || true)
         if [ -n "$docx_file" ]; then
             docx_link="https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file"
         else
