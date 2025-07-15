@@ -102,11 +102,15 @@ runs:
       if: ${{ inputs.preview == 'true' }}
       run: |
         if [ '${{ inputs.root_path }}' != '.' ]; then
+          cwd=$(pwd)
           cd ${{ github.workspace }}/${{ inputs.root_path }}/docs
           zip -r ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip .
+          cd ${{ cwd }}
         else
+          cwd=$(pwd)
           cd ${{ github.workspace }}/docs
           zip -r ${{ github.workspace }}/website-preview.zip .
+          cd ${{ cwd }}
         fi
       shell: bash
 
@@ -161,7 +165,7 @@ runs:
       if: ${{ inputs.preview == 'true' }}
       id: build-components
       run: |
-        docx_file=$(ls *.docx 2>/dev/null | head -1 || true)
+        docx_file=$(ls ./docs/*.docx 2>/dev/null | head -1 || true)
         if [ -n "$docx_file" ]; then
             docx_link="https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file"
         else
