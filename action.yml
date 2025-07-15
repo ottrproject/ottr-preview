@@ -100,14 +100,14 @@ runs:
 
     - name: Website preview for download
       if: ${{ inputs.preview == 'true' }}
+      env: 
+        currentwd: $(pwd)
       run: |
         if [ '${{ inputs.root_path }}' != '.' ]; then
-          currentwd=$(pwd)
           cd ${{ github.workspace }}/${{ inputs.root_path }}/docs
           zip -r ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip .
           cd ${{ currentwd }}
         else
-          currentwd=$(pwd)
           cd ${{ github.workspace }}/docs
           zip -r ${{ github.workspace }}/website-preview.zip .
           cd ${{ currentwd }}
