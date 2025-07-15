@@ -77,8 +77,8 @@ runs:
       id: render
       run: |
         curl -OL https://github.com/ottrproject/ottr-preview/raw/refs/heads/main/entrypoint.sh
-        # TODO: I was fighting curl about downloads I know this should be a separate step
-        # Just fix this silly thing later.
+        : # TODO: I was fighting curl about downloads I know this should be a separate step
+        : # Just fix this silly thing later.
         if [ '${{ inputs.root_path }}' != '.' ]; then
           mv entrypoint.sh ${{ inputs.root_path }}/entrypoint.sh
         fi
@@ -104,9 +104,11 @@ runs:
         if [ '${{ inputs.root_path }}' != '.' ]; then
           cd ${{ github.workspace }}/${{ inputs.root_path }}/docs
           zip -r ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip .
+          cd ${{ github.workspace }}
         else
           cd ${{ github.workspace }}/docs
           zip -r ${{ github.workspace }}/website-preview.zip .
+          cd ${{ github.workspace }}
         fi
       shell: bash
 
