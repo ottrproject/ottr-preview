@@ -102,15 +102,15 @@ runs:
       if: ${{ inputs.preview == 'true' }}
       run: |
         if [ '${{ inputs.root_path }}' != '.' ]; then
-          cwd=$(pwd)
+          currentwd=$(pwd)
           cd ${{ github.workspace }}/${{ inputs.root_path }}/docs
           zip -r ${{ github.workspace }}/${{ inputs.root_path }}/website-preview.zip .
-          cd ${{ cwd }}
+          cd ${{ currentwd }}
         else
-          cwd=$(pwd)
+          currentwd=$(pwd)
           cd ${{ github.workspace }}/docs
           zip -r ${{ github.workspace }}/website-preview.zip .
-          cd ${{ cwd }}
+          cd ${{ currentwd }}
         fi
       shell: bash
 
