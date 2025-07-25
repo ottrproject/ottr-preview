@@ -4,7 +4,8 @@ name: Testing ottr-preview
 on:
   workflow_dispatch:
   pull_request:
-    branches: [ main, dev ]
+    types:
+      - opened
 
 jobs:
   rmd-render:
@@ -20,13 +21,13 @@ jobs:
         fetch-depth: 0
 # update for your user name and branch to test
     - name: Run render for Rmd
-      uses: ottrproject/ottr-preview@cansavvy/no-docx
+      uses: ottrproject/ottr-preview@flatten-directory-paths
       with:
         toggle_website: "rmd"
         root_path: test-rmd
 
-    - name: Run render for Quarto
-      uses: ottrproject/ottr-preview@cansavvy/no-docx
-      with:
-        toggle_website: "quarto"
-        root_path: test-quarto
+#    - name: Run render for Quarto
+#      uses: ottrproject/ottr-preview@flatten-directory-paths
+#      with:
+#        toggle_website: "quarto"
+#        root_path: test-quarto
