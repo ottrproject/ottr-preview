@@ -163,10 +163,10 @@ runs:
       run: |
         if [ '${{ inputs.root_path }}' != '.' ]; then
           cd ${{ github.workspace }}/${{ inputs.root_path }}/docs
-          docx_file=$(ls *.docx 2>/dev/null | head -1 || true)
+          docx_file="${{ github.workspace }}/${{ inputs.root_path }}/docs/$(ls *.docx 2>/dev/null | head -1 || true)"
         else
           cd ${{ github.workspace }}/docs
-          docx_file=$(ls *.docx 2>/dev/null | head -1 || true)
+          docx_file="${{ github.workspace }}/docs/$(ls *.docx 2>/dev/null | head -1 || true)"
         fi
         if [ -n "$docx_file" ]; then
             docx_link="https://github.com/$GITHUB_REPOSITORY/raw/preview-${{ github.event.pull_request.number }}/$docx_file"
